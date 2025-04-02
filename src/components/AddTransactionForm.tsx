@@ -1,21 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface AddTransactionFormProps {
   onAddTransaction: (description: string, amount: number, type: 'income' | 'expense', date: string) => void;
+  onEditTransaction: (id: number, description: string, amount: number, type: 'income' | 'expense', date: string) => void;
+  transactionToEdit: { id: number; description: string; amount: number; type: 'income' | 'expense'; date: string } | null;
 }
 
-const AddTransactionForm: React.FC<AddTransactionFormProps> = ({ onAddTransaction }) => {
+const AddTransactionForm: React.FC<AddTransactionFormProps> = ({ onAddTransaction, onEditTransaction, transactionToEdit }) => {
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
   const [type, setType] = useState<'income' | 'expense'>('income');
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState<string>('');
+
+  // Si hay una transacción para editar, cargar sus valores
+  useEffect(() => {
+    if (transactionToEdit) {
+      setDescription(transactionToEdit.description);
+      setAmount(transactionToEdit.amount.toString());
+      setType(transactionToEdit.type);
+      setDate(transactionToEdit.date); // Cargar la fecha al editar
+    }
+  }, [transactionToEdit]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!description || !amount || !date) return;
-    onAddTransaction(description, parseFloat(amount), type, date);
+    if (!description || !amount || !date) {
+      alert('Por favor, completa todos los campos.');
+      return;
+    }
+
+    if (transactionToEdit) {
+      // Editar transacción
+      onEditTransaction(transactionToEdit.id, description, parseFloat(amount), type, date);
+    } else {
+      // Agregar nueva transacción
+      onAddTransaction(description, parseFloat(amount), type, date);
+    }
+
+    // Resetear el formulario después de enviar
     setDescription('');
     setAmount('');
+    setType('income');
     setDate('');
   };
 
@@ -49,7 +74,9 @@ const AddTransactionForm: React.FC<AddTransactionFormProps> = ({ onAddTransactio
         onChange={(e) => setDate(e.target.value)}
         className="border p-2 rounded-md w-full"
       />
-      <button type="submit" className="bg-blue-500 text-white p-2 rounded-md">Añadir Transacción</button>
+      <button type="submit" className="bg-blue-500 text-white p-2 rounded-md">
+        {transactionToEdit ? 'Editar Transacción' : 'Añadir Transacción'}
+      </button>
     </form>
   );
 };

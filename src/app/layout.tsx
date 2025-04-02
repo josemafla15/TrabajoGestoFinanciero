@@ -4,8 +4,8 @@ import { Doto } from 'next/font/google';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Configuration Typography',
-  description: 'Example in Next.js for typography configuration',
+  title: 'Gestor financiero',
+  description: 'Aplicación para rasterar tus finanzas',
 };
 
 // Paso 2. Configuro la importacion

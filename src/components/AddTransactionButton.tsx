@@ -1,14 +1,12 @@
-interface AddTransactionButtonProps {
-  onClick: () => void;
-}
-
-export default function AddTransactionButton({ onClick }: AddTransactionButtonProps) {
+const AddTransactionButton: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   return (
     <button
       onClick={onClick}
-      className='mt-6 px-6 py-3 bg-app-primary text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition'
+      className="bg-blue-500 text-white p-2 rounded-md mt-8" // Aquí agregamos el margen
     >
       Agregar Transacción
     </button>
   );
-}
+};
+
+export default AddTransactionButton;
